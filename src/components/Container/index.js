@@ -1,58 +1,119 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 import './index.less';
 
 export default function (props) {
-  const [realWidth, setRealWidth] = useState(null);
-  const [realHeight, setRealHeight] = useState(null);
-  const [transform, setTransform] = useState(null);
-  const domRef = useRef(null);
-  const { children, options = {} } = props;
+  const [clientHeight, setClientHeight] = useState(0);
+  const [clientWidth, setClientWidth] = useState(0);
+  const [heightRatio, setHeightRatio] = useState(1);
+  const [widthRatio, setWidthRatio] = useState(1);
+  const [realScalType, setRealScalType] = useState(1);
 
-  useEffect(async () => {
-    await initSize();
-    window.addEventListener('resize', initSize);
+  const { children, options } = props;
+  const { width, height, scaleType } = options;
+
+  const domRef = useRef(null);
+
+  useEffect(() => {
+    // if (scaleType === 'auto') {
+    //   setRealScalType(1);
+    // } else {
+    //   setRealScalType(scaleType);
+    // }
+    resizeWindow();
+    window.addEventListener('resize', resizeWindow);
+    return () => {
+      window.removeEventListener('resize', () => {
+        resizeWindow();
+      });
+    };
   }, []);
 
-  const initSize = () => {
-    const { width, height } = options; // 指定尺寸的大屏
-    let clientWidth, clientHeight;
-    if (domRef) {
-      // 容器的大小
-      clientWidth = domRef.current?.clientWidth;
-      clientHeight = domRef.current?.clientHeight;
+  useEffect(() => {
+    setScaleValue();
+  }, [realScalType, clientHeight, clientWidth, heightRatio, widthRatio]);
+
+  const resizeWindow = () => {
+    const cHeight = document.documentElement.clientHeight;
+    const cWidth = document.documentElement.clientWidth;
+    setClientHeight(cHeight);
+    setClientWidth(cWidth);
+    setHeightRatio(Number(cHeight / height));
+    setWidthRatio(Number(cWidth / width));
+
+    if (scaleType === 'auto') {
+      if (realScalType === 1 && scaleObj.height > clientHeight) {
+        //以横向为准
+        setRealScalType(2);
+      } else if (realScalType === 2 && scaleObj.width > clientWidth) {
+        setRealScalType(1);
+      } else {
+        setRealScalType(1);
+      }
+    } else {
+      setRealScalType(scaleType);
     }
-    const screen = window.screen;
-    const currentWidth = document.body.clientWidth;
-    const currentHeight = document.body.clientHeight;
-
-    console.log('-------------');
-    console.log('指定尺寸:', width, height);
-    console.log('容器尺寸:', clientWidth, clientHeight);
-    console.log('窗口画布尺寸:', screen.width, screen.height);
-    console.log('真实可视尺寸:', currentWidth, currentHeight);
-    console.log('-------------');
-
-    // 大屏的最终尺寸
-    let _realWidth = width || clientWidth;
-    let _realHeight = height || clientHeight;
-
-    const widthScale = currentWidth / _realWidth;
-    const heightScale = currentHeight / _realHeight;
-    const _transform = `scale(${widthScale}, ${heightScale})`;
-
-    setRealWidth(_realWidth);
-    setRealHeight(_realHeight);
-    setTransform(_transform);
   };
+
+  const scaleObj = useMemo(setScaleValue, [
+    realScalType,
+    clientWidth,
+    clientHeight,
+    widthRatio,
+    heightRatio,
+  ]);
+
+  function setScaleValue() {
+    let radio = width / height;
+    if (realScalType == 1) {
+      return {
+        width: clientWidth, // 基于宽
+        height: clientWidth / radio,
+        widthRadio: widthRatio,
+        heightRadio: widthRatio,
+      };
+    }
+
+    if (realScalType == 2) {
+      return {
+        width: clientHeight * radio,
+        height: clientHeight, // 基于高
+        widthRadio: heightRatio,
+        heightRadio: heightRatio,
+      };
+    }
+
+    if (realScalType == 3) {
+      return {
+        width: clientWidth, // 全屏
+        height: clientHeight,
+        widthRadio: widthRatio,
+        heightRadio: heightRatio,
+      };
+    }
+  }
 
   return (
     <div
-      id="container"
       ref={domRef}
-      style={{ width: `${realWidth}px`, height: `${realHeight}px`, transform }}
+      className="wrap-wrap"
+      style={{ width: scaleObj.width + 'px', height: scaleObj.height + 'px' }}
     >
-      {children}
+      <div
+        className="main-content"
+        style={{
+          transformOrigin: 'left top',
+          transform: `scale(${scaleObj.widthRadio},${scaleObj.heightRadio})`,
+          WebkitTransform: `scale(${scaleObj.widthRadio},${scaleObj.heightRadio})`,
+          MozTransform: `scale(${scaleObj.widthRadio},${scaleObj.heightRadio})`,
+          OTransform: `scale(${scaleObj.widthRadio},${scaleObj.heightRadio})`,
+          msTransform: `scale(${scaleObj.widthRadio},${scaleObj.heightRadio})`,
+          width: `${width}px`,
+          height: `${height}px`,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

@@ -1,61 +1,107 @@
 .top-header {
-  display: flex;
-  align-items: center;
+  position: relative;
   width: 100%;
   height: 100%;
   background: rgb(36, 31, 32);
   padding: 0 64px;
   box-sizing: border-box;
+  background: url(../../assets/layout/header_img.png) no-repeat center / cover;
 
-  .logo {
-    width: 395px;
-    height: 99px;
+  .subtitle {
+    font-size: 14px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #ffffff;
+    width: 162px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
   }
 
-  .logo-text {
-    flex: 1;
-    margin-left: 40px;
-
-    .cn-text {
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-      font-size: 60px;
-      letter-spacing: 2px;
-    }
-
-    .en-text {
-      color: rgb(255, 255, 255);
-      font-size: 35px;
-      letter-spacing: 1px;
-    }
+  .subtitle-left {
+    position: absolute;
+    top: 47px;
+    left: 476px;
+  }
+  .left-choosed {
+    background: url(../../assets/layout/subtitle_left_click.png) no-repeat
+      center / cover;
+  }
+  .left-no-choose {
+    background: url(../../assets/layout/subtitle_left.png) no-repeat center /
+      cover;
   }
 
-  .right-text {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  .header-title {
+    position: absolute;
+    top: 6px;
+    left: 768px;
+    font-size: 40px;
+    font-family: YouSheBiaoTiHei;
+    color: #ffffff;
+    line-height: 52px;
+  }
 
-    img {
-      width: 363px;
-      height: 150px;
+  .subtitle-right {
+    position: absolute;
+    top: 47px;
+    right: 476px;
+  }
+  .right-choosed {
+    background: url(../../assets/layout/subtitle_right_click.png) no-repeat
+      center / cover;
+  }
+  .right-no-choose {
+    background: url(../../assets/layout/subtitle_right.png) no-repeat center /
+      cover;
+  }
+
+  .time {
+    position: absolute;
+    top: 26px;
+    right: 26px;
+    font-size: 18px;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
+    color: #ffffff;
+  }
+
+  .header-light {
+    z-index: 2;
+    background: url(../../assets/layout/header_light.png) no-repeat center /
+      cover;
+    position: absolute;
+    bottom: 22px;
+    left: 530px;
+    height: 4px;
+    width: 20%;
+    animation: move 3s linear infinite;
+    -moz-animation: move 3s linear infinite;
+    -webkit-animation: move 1.5s linear infinite;
+    -o-animation: move 3s linear infinite;
+  }
+
+  @keyframes move {
+    0% {
+      left: 530px;
     }
-
-    .date {
-      width: 330px;
-      text-align: right;
-      font-size: 52px;
-      color: rgb(255, 255, 255);
-      font-family: DIN;
-      font-weight: 500;
+    50% {
+      left: 830px;
     }
-
-    .time {
-      width: 220px;
-      font-size: 52px;
-      color: rgb(197, 251, 121);
-      font-family: DIN;
-      font-weight: 500;
-      margin-left: 30px;
+    100% {
+      left: 1030px;
+    }
+  }
+  @-webkit-keyframes move {
+    0% {
+      left: 530px;
+    }
+    50% {
+      left: 830px;
+    }
+    100% {
+      left: 1030px;
     }
   }
 }

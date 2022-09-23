@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 /** 按需引入 */
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
+import 'echarts-liquidfill';
 // 按需引入图表，图表后缀都为 Chart
 import {
   BarChart,

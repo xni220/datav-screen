@@ -10,7 +10,7 @@ export default function (props) {
     m = m < 10 ? '0' + m : m;
     let d = v.getDate();
     d = d < 10 ? '0' + d : d;
-    return v.getFullYear() + '-' + m + '-' + d;
+    return v.getFullYear() + '.' + m + '.' + d;
   }
 
   function timeFilter(v) {
@@ -26,7 +26,6 @@ export default function (props) {
   let task;
   const start = () => {
     task = setInterval(() => {
-      console.log('11');
       now = new Date();
       setDate(dateFilter(now));
       setTime(timeFilter(now));
