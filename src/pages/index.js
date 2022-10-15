@@ -16,17 +16,21 @@ import {
 import './index.less';
 import TheMap from '@/pages/components/map/index';
 
+import { getLands } from '@/pages/services/api';
+
 export default function IndexPage() {
   const [ready, setReady] = useState(true);
   const [selectVal, setSelectVal] = useState('condition');
   const [choosedStation, setChoosedStation] = useState('condition');
 
-  useEffect(() => {
+  useEffect(async () => {
     setTimeout(() => {
       setReady(true);
       console.log('useEffect');
       document.title = '智慧农业大屏';
     }, 1000);
+
+    const { data } = await getLands({ land_id: _get_('id') });
   }, []);
 
   const handleChange = () => {
