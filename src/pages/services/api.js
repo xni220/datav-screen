@@ -14,3 +14,11 @@ export async function getLands(params = {}, options = {}) {
     ...(options || {}),
   });
 }
+
+export async function getDataList(params = {}, options = {}) {
+  return request(apiDir + '?namespace=daping2', {
+    method: 'GET',
+    params: { ...params },
+    ...(options || {}),
+  });
+}

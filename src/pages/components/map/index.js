@@ -15,8 +15,7 @@ export default function ChartMap() {
       // 先让它加载完
       setTimeout(() => initMap(), 1000);
     } else {
-      var url =
-        'https://webapi.amap.com/maps?v=1.4.14&key=9fc27ac1a7a356bcca532de7d5b080ae&plugin=AMap.CustomLayer&callback=onLoad';
+      var url = `https://webapi.amap.com/maps?v=1.4.14&key=${window.pageConfig.gdkey}&plugin=AMap.CustomLayer&callback=onLoad`;
 
       var jsapi = document.createElement('script');
       jsapi.charset = 'utf-8';
@@ -38,6 +37,7 @@ export default function ChartMap() {
   const initMap = () => {
     var map = new AMap.Map(id, {
       resizeEnable: true,
+      center: [114.386, 31.2437],
     });
     // 增加卫星图层;
     var satelliteLayer = new AMap.TileLayer.Satellite();

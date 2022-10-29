@@ -15,13 +15,25 @@ import {
 } from './data';
 import './index.less';
 import TheMap from '@/pages/components/map/index';
+import { getLands, getDataList } from '@/pages/services/api';
 
-import { getLands } from '@/pages/services/api';
+const isDev = process.env.NODE_ENV === 'development';
+const site_url = isDev ? 'https://test2.feinibuqu.cn' : window.location.origin;
+
+const imgs = [
+  require('@/assets/index/bg_size.png'),
+  require('@/assets/index/bg_multiple.png'),
+  require('@/assets/index/bg_plant.png'),
+  require('@/assets/index/bg_file.png'),
+];
 
 export default function IndexPage() {
   const [ready, setReady] = useState(true);
   const [selectVal, setSelectVal] = useState('condition');
   const [choosedStation, setChoosedStation] = useState('condition');
+
+  //数据
+  const [dapingInfo, setDapingInfo] = useState(null);
 
   useEffect(async () => {
     setTimeout(() => {
@@ -29,8 +41,11 @@ export default function IndexPage() {
       console.log('useEffect');
       document.title = '智慧农业大屏';
     }, 1000);
+  }, []);
 
-    const { data } = await getLands({ land_id: _get_('id') });
+  useEffect(async () => {
+    const { data } = await getDataList({ land_id: _get_('id') });
+    setDapingInfo(data);
   }, []);
 
   const handleChange = () => {
@@ -69,25 +84,34 @@ export default function IndexPage() {
 
                       <img
                         className="sun"
-                        src={require('@/assets/index/sun.png')}
+                        src={
+                          site_url +
+                          '/zy_public/tianqi/' +
+                          dapingInfo?.weather?.detail?.weather_code +
+                          '.png'
+                        }
                       />
                       <div className="weather">
-                        <div className="number">30°C</div>
-                        <div className="text">晴</div>
+                        <div className="number">
+                          {dapingInfo?.weather?.detail?.temperature}°C
+                        </div>
+                        <div className="text">
+                          {dapingInfo?.weather?.detail?.weather}
+                        </div>
                       </div>
                       <div className="date">
-                        <span>2022-09-14</span>
+                        <span>{dapingInfo?.weather?.detail?.date}</span>
                         <img src={require('@/assets/index/divider.png')} />
-                        <span>星期三</span>
+                        <span>星期{dapingInfo?.weather?.detail?.week}</span>
                       </div>
                     </div>
                     <div className="body-bottom">
-                      {baseInfo.map((item) => (
+                      {dapingInfo?.landInfo?.map((item, index) => (
                         <div
                           className="cont-item"
                           key={item.label}
                           style={{
-                            background: `url(${item.url}) no-repeat
+                            background: `url(${imgs[index]}) no-repeat
                             center / cover`,
                           }}
                         >

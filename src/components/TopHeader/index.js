@@ -23,16 +23,16 @@ export default function (props) {
         }`}
         onClick={handleClickLeft}
       >
-        xxxx系统
+        智慧农业
       </div>
-      <div className="header-title">智慧农业大数据检测中心</div>
+      <div className="header-title">{window.pageConfig.title}</div>
       <div
         className={`subtitle subtitle-right ${
           rightChoosed ? 'right-choosed' : 'right-no-choose'
         }`}
         onClick={handleClickRight}
       >
-        xxxx系统
+        智慧农业
       </div>
       <div className="time">
         <span>{date} </span>
